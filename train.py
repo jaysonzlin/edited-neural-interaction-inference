@@ -357,7 +357,7 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
         # mask = mask * 0
         # mask[rw_pair] = 1
 
-        if FLAGS.forecast is not -1:
+        if FLAGS.forecast != -1:
             feat_enc = feat[:, :, :-FLAGS.forecast]
         else: feat_enc = feat
         feat_enc = normalize_trajectories(feat_enc, augment=False, normalize=FLAGS.normalize_data_latent)
@@ -447,8 +447,9 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
                     fig.savefig('temp.png', dpi=fig.dpi)
                     savedir = os.path.join('/',*(logger.log_dir.split('/')[:-3]),'results/new_constrain_2/')
                     inp = input('Next: n; or Save newconstrain plot with name: ')
-                    if inp is not 'n':
+                    if inp != 'n':
                         savedir_i = savedir + inp + '_new_constrain_'
+                        os.makedirs(os.path.dirname(savedir_i), exist_ok=True)
                         if FLAGS.reference_point is not None:
                             np.save(savedir_i + 'reference_point.npy', np.array(reference_point))
                         np.save(savedir_i + 'feats.npy', feat[b_idx:b_idx+1].detach().cpu().numpy())
@@ -460,10 +461,11 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
                 else:
                     savedir = os.path.join('/',*(logger.log_dir.split('/')[:-3]),'results/pred_rec_examples/')
                     inp = input('Next: n; or Save generated sample with name: ')
-                    if inp is not 'n':
+                    if inp != 'n':
                         if FLAGS.pred_only:
                             savedir += inp + '_pred_'+FLAGS.dataset+'_'
                         else: savedir += inp + '_rec-pred_'+FLAGS.dataset+'_'
+                        os.makedirs(os.path.dirname(savedir), exist_ok=True)
                         np.save(savedir + 'gt_traj_all.npy', feat_copy[b_idx:b_idx+1].detach().cpu().numpy())
                         np.save(savedir + 'gt_traj_pred.npy', feat[b_idx:b_idx+1].detach().cpu().numpy())
                         np.save(savedir + 'pred_all_samples.npy', torch.stack(feat_negs)[:, b_idx:b_idx+1].detach().cpu().numpy())
@@ -517,7 +519,7 @@ def test(train_dataloader, models, models_ema, FLAGS, step=0, save = False):
                 mask[torch.arange(0, bs), sel_edges+n] = 0
         else: raise NotImplementedError
 
-        if FLAGS.forecast is not -1:
+        if FLAGS.forecast != -1:
             feat_enc = feat[:, :, :-FLAGS.forecast]
         else: feat_enc = feat
 
@@ -580,7 +582,7 @@ def train(train_dataloader, test_dataloader, logger, models, models_ema, optimiz
             feat = feat.to(dev)
 
             if it == FLAGS.resume_iter: [save_rel_matrices(model, rel_rec.to(dev), rel_send.to(dev)) for model in models]
-            if FLAGS.forecast is not -1:
+            if FLAGS.forecast != -1:
                 feat_enc = feat[:, :, :-FLAGS.forecast]
             else: feat_enc = feat
 
@@ -827,7 +829,7 @@ def main_single(rank, FLAGS):
     FLAGS_OLD = FLAGS
 
     if FLAGS.resume_iter != 0:
-        if FLAGS.resume_name is not '':
+        if FLAGS.resume_name != '':
             logdir = osp.join(FLAGS.logdir, branch_folder, FLAGS.exp, FLAGS.resume_name)
         if FLAGS.resume_iter == -1:
             model_path = osp.join(logdir, "model_best.pth")
