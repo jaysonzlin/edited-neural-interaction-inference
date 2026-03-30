@@ -9,11 +9,11 @@ parser.add_argument('--simulation', type=str, default='charged',
                     help='What simulation to generate.')
 parser.add_argument('--datadir', type=str, default='./datasets/',
                     help='Where to dave the data.')
-parser.add_argument('--num-train', type=int, default=50000,
+parser.add_argument('--num-train', type=int, default=5000,
                     help='Number of training simulations to generate.')
-parser.add_argument('--num-valid', type=int, default=10000,
+parser.add_argument('--num-valid', type=int, default=1000,
                     help='Number of validation simulations to generate.')
-parser.add_argument('--num-test', type=int, default=10000,
+parser.add_argument('--num-test', type=int, default=1000,
                     help='Number of test simulations to generate.')
 parser.add_argument('--length', type=int, default=10000,
                     help='Length of trajectory.')
@@ -99,6 +99,7 @@ loc_test, vel_test, edges_test = generate_dataset(args.num_test,
                                                   args.sample_freq)
 
 datadir = args.datadir
+os.makedirs(datadir, exist_ok=True)
 
 print('Saving in: {}'.format(datadir + 'loc-vel_train-valid-test' + suffix + '.npy'))
 

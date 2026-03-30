@@ -268,17 +268,17 @@ class ChargedSpringsParticles(data.Dataset):
         return self.length
 
     def _load_data(self, batch_size=1, suffix='', split='train'):
-        loc_train = np.load('/data/Armand/NRI/loc_train' + suffix + '.npy')
-        vel_train = np.load('/data/Armand/NRI/vel_train' + suffix + '.npy')
-        edges_train = np.load('/data/Armand/NRI/edges_train' + suffix + '.npy')
+        loc_train = np.load(root + 'loc_train' + suffix + '.npy')
+        vel_train = np.load(root + 'vel_train' + suffix + '.npy')
+        edges_train = np.load(root + 'edges_train' + suffix + '.npy')
 
-        loc_valid = np.load('/data/Armand/NRI/loc_valid' + suffix + '.npy')
-        vel_valid = np.load('/data/Armand/NRI/vel_valid' + suffix + '.npy')
-        edges_valid = np.load('/data/Armand/NRI/edges_valid' + suffix + '.npy')
+        loc_valid = np.load(root + 'loc_valid' + suffix + '.npy')
+        vel_valid = np.load(root + 'vel_valid' + suffix + '.npy')
+        edges_valid = np.load(root + 'edges_valid' + suffix + '.npy')
 
-        loc_test = np.load('/data/Armand/NRI/loc_test' + suffix + '.npy')
-        vel_test = np.load('/data/Armand/NRI/vel_test' + suffix + '.npy')
-        edges_test = np.load('/data/Armand/NRI/edges_test' + suffix + '.npy')
+        loc_test = np.load(root + 'loc_test' + suffix + '.npy')
+        vel_test = np.load(root + 'vel_test' + suffix + '.npy')
+        edges_test = np.load(root + 'edges_test' + suffix + '.npy')
 
         # [num_samples, num_timesteps, num_dims, num_atoms]
         num_atoms = loc_train.shape[3]

@@ -68,7 +68,7 @@ class SpringSim(object):
         A_norm = (A ** 2).sum(axis=1).reshape(A.shape[0], 1)
         B_norm = (B ** 2).sum(axis=1).reshape(1, B.shape[0])
         dist = A_norm + B_norm - 2 * A.dot(B.transpose())
-        return dist
+        return np.maximum(dist, 0)
 
     def sample_trajectory(self, T=10000, sample_freq=10,
                           spring_prob=[1. / 2, 0, 1. / 2]):
@@ -165,7 +165,7 @@ class ChargedParticlesSim(object):
         A_norm = (A ** 2).sum(axis=1).reshape(A.shape[0], 1)
         B_norm = (B ** 2).sum(axis=1).reshape(1, B.shape[0])
         dist = A_norm + B_norm - 2 * A.dot(B.transpose())
-        return dist
+        return np.maximum(dist, 0)
 
     def _energy(self, loc, vel, edges):
 
@@ -313,7 +313,7 @@ class ChargedSpringsParticlesSim(object):
         A_norm = (A ** 2).sum(axis=1).reshape(A.shape[0], 1)
         B_norm = (B ** 2).sum(axis=1).reshape(1, B.shape[0])
         dist = A_norm + B_norm - 2 * A.dot(B.transpose())
-        return dist
+        return np.maximum(dist, 0)
 
     def _energy_springs(self, loc, vel, edges):
         # disables division by zero warning, since I fix it with fill_diagonal
