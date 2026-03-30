@@ -56,12 +56,12 @@ def main():
     print("Loading Models...")
     # 3. Load Model S (Springs) and Model C (Charges) explicitly!
     model_s = NodeGraphEBM(FLAGS, dataset_s).to(dev)
-    ckpt_s = torch.load('/Users/jaysonlin/Desktop/neural-interaction-inference/data/Armand/EBM/experiments_icml/springs/pretrained_springs/model_best.pth', map_location=dev)
+    ckpt_s = torch.load('/Users/jaysonlin/Desktop/neural-interaction-inference/data/Armand/EBM/experiments_icml/springs/pretrained_springs/model_best.pth', map_location=dev, weights_only=False)
     model_s.load_state_dict(ckpt_s['model_state_dict_0'], strict=False)
     model_s.eval()
 
     model_c = NodeGraphEBM(FLAGS, dataset_c).to(dev)
-    ckpt_c = torch.load('/Users/jaysonlin/Desktop/neural-interaction-inference/data/Armand/EBM/experiments_icml/charged/NO5_BS20_S-LR0.2_NS5_NSEnd5at200k_LR0.0003_LDim64_SN0_AE1_CDAE1_ModCNNOS_Node_NMod1_Mask-random_NoM0_FE1_NDL1_SeqL70_FSeqL1_FC21Only_filters_256/model_best.pth', map_location=dev)
+    ckpt_c = torch.load('/Users/jaysonlin/Desktop/neural-interaction-inference/data/Armand/EBM/experiments_icml/charged/NO5_BS20_S-LR0.2_NS5_NSEnd5at200k_LR0.0003_LDim64_SN0_AE1_CDAE1_ModCNNOS_Node_NMod1_Mask-random_NoM0_FE1_NDL1_SeqL70_FSeqL1_FC21Only_filters_256/model_best.pth', map_location=dev, weights_only=False)
     model_c.load_state_dict(ckpt_c['model_state_dict_0'], strict=False)
     model_c.eval()
 

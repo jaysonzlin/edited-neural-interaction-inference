@@ -833,7 +833,7 @@ def main_single(rank, FLAGS):
             model_path = osp.join(logdir, "model_best.pth")
         else:
             model_path = osp.join(logdir, "model_{}.pth".format(FLAGS.resume_iter))
-        checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
+        checkpoint = torch.load(model_path, map_location=torch.device('cpu'), weights_only=False)
         FLAGS = checkpoint['FLAGS']
 
         ## The following flags will be loaded from the saved model.
