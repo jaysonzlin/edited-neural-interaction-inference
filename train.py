@@ -469,6 +469,18 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
                         np.save(savedir + 'gt_traj_all.npy', feat_copy[b_idx:b_idx+1].detach().cpu().numpy())
                         np.save(savedir + 'gt_traj_pred.npy', feat[b_idx:b_idx+1].detach().cpu().numpy())
                         np.save(savedir + 'pred_all_samples.npy', torch.stack(feat_negs)[:, b_idx:b_idx+1].detach().cpu().numpy())
+                        
+                        # Added Graphical Bypass to render the actual visual graphs mathematically alongside the npy files
+                        plt_gen, fig_gen = get_trajectory_figure(feat_negs[-1], b_idx=b_idx, lims=[-1, 1], args=FLAGS)
+                        if fig_gen is not None:
+                            fig_gen.savefig(savedir + inp + '_gen.png', dpi=fig_gen.dpi)
+                            plt_gen.close(fig_gen)
+                        
+                        plt_gt, fig_gt = get_trajectory_figure(feat, b_idx=b_idx, lims=[-1, 1], args=FLAGS)
+                        if fig_gt is not None:
+                            fig_gt.savefig(savedir + inp + '_gt.png', dpi=fig_gt.dpi)
+                            plt_gt.close(fig_gt)
+                            
                         print('All saved in dir {}'.format(savedir))
         if single_pass == 'y':
             break
