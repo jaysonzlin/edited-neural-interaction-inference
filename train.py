@@ -437,7 +437,7 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
                     logger.add_figure('test_manip_gen_rec', get_trajectory_figure(feat_negs[i_plt], lims=lims, b_idx=b_idx, highlight_nodes = affected_nodes, args=FLAGS)[1], step + i_plt + 100*factor_id)
                 logger.add_figure('test_manip_gen', get_trajectory_figure(feat_negs[-1], lims=lims, b_idx=b_idx, highlight_nodes = affected_nodes, args=FLAGS)[1], step + 100*factor_id)
                 logger.add_figure('test_manip_gt', get_trajectory_figure(feat, b_idx=b_idx, lims=lims, args=FLAGS)[1], step + 100*factor_id)
-                logger.add_figure('test_manip_gt_ref', get_trajectory_figure(feat, b_idx=b_idx_ref, lims=lim, args=FLAGS)[1], step + 100*factor_id)
+                logger.add_figure('test_manip_gt_ref', get_trajectory_figure(feat, b_idx=b_idx_ref, lims=lims, args=FLAGS)[1], step + 100*factor_id)
                 print('Plotted.')
 
                 if FLAGS.new_energy != '':
