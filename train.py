@@ -466,6 +466,13 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
 
                 else:
                     savedir = os.path.join('/',*(logger.log_dir.split('/')[:-3]),'results/pred_rec_examples/')
+                    
+                    # Compute the dynamic physics MSE deviation for the current visualization!
+                    mse_loss = ((feat_negs[-1][b_idx] - feat[b_idx])**2).mean().item()
+                    print(f'\n======================================')
+                    print(f'Generated MSE Loss vs Ground Truth: {mse_loss:.6f}')
+                    print(f'======================================\n')
+                    
                     inp = input('Next: n; or Save generated sample with name: ')
                     if inp != 'n':
                         if FLAGS.pred_only:
