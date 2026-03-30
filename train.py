@@ -309,7 +309,7 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
 
     counter = 0
 
-    single_pass = input('Single pass? (y: Yes): ')
+    single_pass = input('Single pass? (y: Yes, or integer for Batch Index): ')
     save = input('Save? (y: Yes, n: No): ')
     # save = 'y'; single_pass = 'y'
     print('Begin test:')
@@ -328,7 +328,8 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
         feat_copy = feat.clone()
         [save_rel_matrices(model, rel_rec, rel_send) for model in models]
 
-        b_idx = 0
+        b_idx = int(single_pass) if single_pass.isdigit() else 0
+        b_idx = min(b_idx, bs - 1)  # Physically clamp to prevent out-of-bounds crashes!
         b_idx_ref = 2
 
         rw_pair = None
@@ -495,7 +496,7 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
                             plt_gt.close(fig_gt)
                             
                         print('All saved in dir {}'.format(savedir))
-        if single_pass == 'y':
+        if single_pass.lower() == 'y' or single_pass.isdigit():
             break
         if counter >= 1000:
             print('Points; ', counter)
