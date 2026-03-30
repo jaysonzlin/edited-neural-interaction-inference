@@ -443,8 +443,9 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
                 if FLAGS.new_energy != '':
                     plt, fig = get_trajectory_figure(plot_newe_feats, lims=[-1,1], b_idx=b_idx,
                                                      args=FLAGS)
-                    plt.show()
-                    fig.savefig('temp.png', dpi=fig.dpi)
+                    # plt.show() # Bypassed to prevent Headless Qt Authentication crash
+                    # fig.savefig('temp.png', dpi=fig.dpi) # Deleted silly temp.png logic!
+                    
                     savedir = os.path.join('/',*(logger.log_dir.split('/')[:-3]),'results/new_constrain_2/')
                     inp = input('Next: n; or Save newconstrain plot with name: ')
                     if inp != 'n':
@@ -455,6 +456,11 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
                         np.save(savedir_i + 'feats.npy', feat[b_idx:b_idx+1].detach().cpu().numpy())
                         np.save(savedir_i + 'feat_negs.npy', torch.stack(feat_negs)[:, b_idx:b_idx+1].detach().cpu().numpy())
                         np.save(savedir_i + 'feat_neg_last.npy',  feat_negs[-1][b_idx:b_idx+1].detach().cpu().numpy())
+                        
+                        # Dynamically save the beautiful figure using the correct name!
+                        fig.savefig(savedir_i + '.png', dpi=fig.dpi)
+                        plt.close(fig)
+                        
                         print('results saved')
                     else: continue
 
