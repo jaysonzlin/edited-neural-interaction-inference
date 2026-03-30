@@ -938,7 +938,11 @@ def main_single(rank, FLAGS):
         train(train_dataloader, valid_dataloader, logger, models, models_ema, optimizers, schedulers, FLAGS, mask, logdir, rank_idx, replay_buffer)
 
     elif FLAGS.test_manipulate:
-        test_manipulate(test_manipulate_dataloader, models, models_ema, FLAGS, step=FLAGS.resume_iter, save=True, logger=logger)
+        split_choice = input('Which dataset split to evaluate? (Enter train, valid, or leave blank for test): ').strip().lower()
+        target_ds = dataset if split_choice == 'train' else (valid_dataset if split_choice == 'valid' else test_dataset)
+        
+        dynamic_manipulate_dataloader = DataLoader(target_ds, num_workers=FLAGS.data_workers, batch_size=FLAGS.batch_size, shuffle=False, pin_memory=False, drop_last=True)
+        test_manipulate(dynamic_manipulate_dataloader, models, models_ema, FLAGS, step=FLAGS.resume_iter, save=True, logger=logger)
     else:
         test(test_dataloader, models, models_ema, FLAGS, step=FLAGS.resume_iter, save=True)
 
