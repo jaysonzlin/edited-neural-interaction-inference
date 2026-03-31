@@ -2,6 +2,9 @@ import torch
 import numpy as np
 import os.path as osp
 import argparse
+
+import matplotlib
+matplotlib.use('Agg') # Aggressively bypasses headless Linux server Qt Authentication crashes!
 import matplotlib.pyplot as plt
 
 from dataset import ChargedParticles, SpringsParticles
@@ -19,6 +22,7 @@ def main():
     FLAGS.pred_only = True
     FLAGS.normalize_data_latent = True
     FLAGS.num_fixed_timesteps = 1
+    FLAGS.num_timesteps = 70
     FLAGS.num_steps_test = 5
     FLAGS.sample = True
     FLAGS.step_lr = 0.2
