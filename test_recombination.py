@@ -23,7 +23,8 @@ def main():
     FLAGS.normalize_data_latent = True
     FLAGS.num_fixed_timesteps = 1
     FLAGS.num_timesteps = 70
-    FLAGS.num_steps_test = 5
+    FLAGS.num_steps_test = 6
+    FLAGS.batch_size = 20
     FLAGS.sample = True
     FLAGS.step_lr = 0.2
     FLAGS.step_lr_decay_factor = 1.0
@@ -34,7 +35,8 @@ def main():
     FLAGS.masking_type = "random" # Triggers Splits = 2
     FLAGS.additional_model = False
     FLAGS.new_energy = ''
-    FLAGS.dataset = 'unused in this script'
+    FLAGS.cd_and_ae = True
+    FLAGS.dataset = 'charged'
     
     # Model architecture flags
     FLAGS.model_name = 'Node'
@@ -146,13 +148,13 @@ def main():
     lims = [-1, 1]
     
     # 8. Draw the outputs!
-    plt_s, fig_s = get_trajectory_figure(feat_neg_springs, lims=lims, b_idx=0, args=FLAGS)
+    plt_s, fig_s = get_trajectory_figure(feat_neg_springs[:, :, -FLAGS.forecast:], lims=lims, b_idx=0, args=FLAGS)
     fig_s.savefig('pure_springs_generated.png', dpi=300)
     
-    plt_c, fig_c = get_trajectory_figure(feat_neg_charges, lims=lims, b_idx=0, args=FLAGS)
+    plt_c, fig_c = get_trajectory_figure(feat_neg_charges[:, :, -FLAGS.forecast:], lims=lims, b_idx=0, args=FLAGS)
     fig_c.savefig('pure_charges_generated.png', dpi=300)
 
-    plt_h, fig_h = get_trajectory_figure(feat_neg_hybrid, lims=lims, b_idx=0, args=FLAGS)
+    plt_h, fig_h = get_trajectory_figure(feat_neg_hybrid[:, :, -FLAGS.forecast:], lims=lims, b_idx=0, args=FLAGS)
     fig_h.savefig('frankenstein_hybrid_test.png', dpi=300)
     
     print("Test Complete! Three beautiful physics hallucinations saved as PNGs!")
