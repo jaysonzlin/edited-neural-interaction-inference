@@ -76,8 +76,8 @@ def main():
     (feat_c, edges_c), _, _ = dataset_c[0]
     feat_c = torch.as_tensor(feat_c).unsqueeze(0).to(dev).float()
 
-    rel_rec = torch.as_tensor(dataset_s.rel_rec).to(dev).float()
-    rel_send = torch.as_tensor(dataset_s.rel_send).to(dev).float()
+    rel_rec = torch.as_tensor(dataset_s.rel_rec).unsqueeze(0).to(dev).float()
+    rel_send = torch.as_tensor(dataset_s.rel_send).unsqueeze(0).to(dev).float()
 
     # 5. Extract the Latent Blueprints!
     print("Encoding Blueprints...")
