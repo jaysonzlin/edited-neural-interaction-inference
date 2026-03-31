@@ -9,11 +9,11 @@ parser.add_argument('--simulation', type=str, default='charged',
                     help='What simulation to generate.')
 parser.add_argument('--datadir', type=str, default='./datasets/',
                     help='Where to dave the data.')
-parser.add_argument('--num-train', type=int, default=5000,
+parser.add_argument('--num-train', type=int, default=500,
                     help='Number of training simulations to generate.')
-parser.add_argument('--num-valid', type=int, default=1000,
+parser.add_argument('--num-valid', type=int, default=100,
                     help='Number of validation simulations to generate.')
-parser.add_argument('--num-test', type=int, default=1000,
+parser.add_argument('--num-test', type=int, default=100,
                     help='Number of test simulations to generate.')
 parser.add_argument('--length', type=int, default=10000,
                     help='Length of trajectory.')
@@ -30,6 +30,7 @@ args = parser.parse_args()
 
 if args.simulation == 'springs':
     sim = SpringSim(noise_var=0.0, n_balls=args.n_balls)
+    suffix = '_springs'
 elif args.simulation == 'springs-medium':
     sim = SpringSim(noise_var=0.0, n_balls=args.n_balls,
                     interaction_strength=.5)
