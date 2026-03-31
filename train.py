@@ -458,8 +458,10 @@ def test_manipulate(train_dataloader, models, models_ema, FLAGS, step=0, save = 
                     if inp != 'n':
                         savedir_i = savedir + inp + '_new_constrain_'
                         os.makedirs(os.path.dirname(savedir_i), exist_ok=True)
-                        if FLAGS.reference_point is not None:
-                            np.save(savedir_i + 'reference_point.npy', np.array(reference_point))
+                        if hasattr(FLAGS, 'reference_point') and FLAGS.reference_point is not None:
+                            try:
+                                np.save(savedir_i + 'reference_point.npy', np.array(reference_point))
+                            except NameError: pass
                         np.save(savedir_i + 'feats.npy', feat[b_idx:b_idx+1].detach().cpu().numpy())
                         np.save(savedir_i + 'feat_negs.npy', torch.stack(feat_negs)[:, b_idx:b_idx+1].detach().cpu().numpy())
                         np.save(savedir_i + 'feat_neg_last.npy',  feat_negs[-1][b_idx:b_idx+1].detach().cpu().numpy())
@@ -890,6 +892,7 @@ def main_single(rank, FLAGS):
 
         FLAGS.new_energy = FLAGS_OLD.new_energy
         FLAGS.new_energy_magnitude = FLAGS_OLD.new_energy_magnitude
+        FLAGS.reference_point = getattr(FLAGS_OLD, 'reference_point', None)
 
         FLAGS.compute_energy = FLAGS_OLD.compute_energy
         FLAGS.pred_only = FLAGS_OLD.pred_only
