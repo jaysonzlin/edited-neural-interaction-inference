@@ -119,21 +119,31 @@ def main():
 
     print("Running Langevin Dynamics...")
     
-    # Custom extremely simple Langevin loop to bypass complex train.py nesting
+    # Custom extremely precision Langevin loop mapping exactly to train.py's math engine!
     def simulate_langevin(forward_fn, base_feat):
-        feat_neg = torch.rand_like(base_feat) * 2 - 1
+        target_len = FLAGS.forecast + FLAGS.num_fixed_timesteps
         num_fixed = FLAGS.num_fixed_timesteps
-        feat_neg[:, :, :num_fixed] = base_feat[:, :, -FLAGS.forecast : -FLAGS.forecast+num_fixed]
+        
+        # We exclusively optimize only the dynamic prediction frames!
+        feat_opt = (torch.rand(base_feat.shape[0], base_feat.shape[1], target_len - num_fixed, base_feat.shape[3]).to(dev) * 2 - 1)
+        feat_anchor = base_feat[:, :, -target_len : -target_len+num_fixed]
         
         for step in range(FLAGS.num_steps_test):
-            feat_neg.requires_grad = True
-            energy = forward_fn(feat_neg, None, FLAGS)
+            feat_opt.requires_grad = True
             
-            feat_grad = torch.autograd.grad([energy.sum()], [feat_neg], create_graph=False)[0]
+            # Violently attach the fixed anchor right before the mathematical energy calculation!
+            feat_in = torch.cat([feat_anchor, feat_opt], dim=2)
+            energy = forward_fn(feat_in, None, FLAGS)
+            
+            # Autograd isolated purely to the unfixed frames!
+            feat_grad = torch.autograd.grad([energy.sum()], [feat_opt], create_graph=False)[0]
+            
             with torch.no_grad():
-                feat_neg = feat_neg - FLAGS.step_lr * feat_grad
-                feat_neg[:, :, :num_fixed] = base_feat[:, :, -FLAGS.forecast : -FLAGS.forecast+num_fixed]
-        return feat_neg
+                feat_opt = feat_opt - FLAGS.step_lr * feat_grad
+                feat_opt = torch.clamp(feat_opt, -1.5, 1.5)
+                
+        # Recombine perfectly into a flat trajectory representation
+        return torch.cat([feat_anchor, feat_opt], dim=2)
 
     print("Simulating Pure Springs...")
     feat_neg_springs = simulate_langevin(pure_springs_forward, feat_s)
