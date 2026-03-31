@@ -70,11 +70,10 @@ def main():
     model_c.eval()
 
     # 4. Grab 1 batch of Springs and 1 batch of Charges
-    feat_s, edges_s = dataset_s[0][:2]
-    rel_rec_s, rel_send_s = dataset_s[0][1] # edges
+    (feat_s, edges_s), (rel_rec_s, rel_send_s), _ = dataset_s[0]
     feat_s = torch.from_numpy(feat_s).unsqueeze(0).to(dev).float()
     
-    feat_c, edges_c = dataset_c[0][:2]
+    (feat_c, edges_c), _, _ = dataset_c[0]
     feat_c = torch.from_numpy(feat_c).unsqueeze(0).to(dev).float()
 
     rel_rec = torch.from_numpy(dataset_s.rel_rec).to(dev).float()
