@@ -111,17 +111,21 @@ def main():
     def pure_springs_forward(feat_in, latent, original_flags):
         # 1 means Model S analyzes exactly 100% of the edges
         all_ones = torch.ones(FLAGS.components).to(dev)
-        return model_s.forward(feat_in, (latent_s[..., 0, :], all_ones))
+        all_zeros = torch.zeros(FLAGS.components).to(dev)
+        return model_s.forward(feat_in, (latent_s[..., 0, :], all_ones)) + \
+               model_s.forward(feat_in, (latent_s[..., 0, :], all_zeros))
 
     def pure_charges_forward(feat_in, latent, original_flags):
         all_ones = torch.ones(FLAGS.components).to(dev)
-        return model_c.forward(feat_in, (latent_c[..., 0, :], all_ones))
+        all_zeros = torch.zeros(FLAGS.components).to(dev)
+        return model_c.forward(feat_in, (latent_c[..., 0, :], all_ones)) + \
+               model_c.forward(feat_in, (latent_c[..., 0, :], all_zeros))
 
     print("Running Langevin Dynamics...")
     
     # Custom extremely precision Langevin loop mapping exactly to train.py's math engine!
     def simulate_langevin(forward_fn, base_feat):
-        target_len = FLAGS.forecast + FLAGS.num_fixed_timesteps
+        target_len = FLAGS.forecast
         num_fixed = FLAGS.num_fixed_timesteps
         
         # We exclusively optimize only the dynamic prediction frames!
