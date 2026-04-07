@@ -93,7 +93,14 @@ def main():
 
     # 6. Build the Recombination! 
     # Let's target exactly TWO edges to swap from Spring to Charge. (e.g., edges 0 and 1)
-    rw_pair = [0, 1]
+    # rw_pair = [0, 1]
+
+    # Let's target all edges connected to a single node (e.g., node 0) to swap from Spring to Charge.
+    node_idx = 0
+    off_diag = np.ones([FLAGS.n_objects, FLAGS.n_objects]) - np.eye(FLAGS.n_objects)
+    receivers = np.where(off_diag)[0]
+    senders = np.where(off_diag)[1]
+    rw_pair = [i for i in range(FLAGS.components) if receivers[i] == node_idx or senders[i] == node_idx]
     
     mask = torch.ones(FLAGS.components).to(dev) # 1s mean "Give this to Model S"
     mask[rw_pair] = 0                           # 0s mean "Give this to Model C"
